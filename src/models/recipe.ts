@@ -1,0 +1,19 @@
+export interface IRecipe
+ {
+   id:string,
+    title:string,
+    publisher:string,
+    image_url:string,
+    source_url:string,
+    cooking_time:number,
+    servings:number,
+    ingredients: IIngredient[];
+ }
+
+
+ export interface IIngredient
+ {
+    description:string,
+    quantity:number,
+    unit:string
+ }
