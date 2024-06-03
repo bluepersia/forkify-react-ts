@@ -1,10 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IRecipe } from '../models/recipe';
 import { apiKey, baseURL } from '../utility';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from './Spinner';
 import ErrorDisplay from './ErrorDisplay';
 import Preview from './Preview';
+
+const RES_PER_PAGE = 10;
 
 export default function Search({ name }: { name: string }): JSX.Element {
   const queryClient = useQueryClient();
@@ -17,6 +19,22 @@ export default function Search({ name }: { name: string }): JSX.Element {
     queryKey: ['search'],
     queryFn: fetchRecipes,
   });
+
+  const [page, setPage] = useState<number>(1);
+
+  function getTotalPages(): number {
+    if (!recipes) return 1;
+
+    return Math.ceil(recipes.length / RES_PER_PAGE);
+  }
+
+  function getCurrentPage(): IRecipe[] {
+    if (!recipes) return [];
+
+    const endIndex = page * RES_PER_PAGE;
+    const startIndex = endIndex - RES_PER_PAGE;
+    return recipes.slice(startIndex, endIndex);
+  }
 
   async function fetchRecipes(): Promise<IRecipe[]> {
     if (!name) return [];
@@ -38,23 +56,34 @@ export default function Search({ name }: { name: string }): JSX.Element {
       <ul className='results'>
         {isFetching && <Spinner />}
         {error && <ErrorDisplay err={error} />}
-        {recipes &&
-          recipes.map((recipe) => <Preview key={recipe.id} {...recipe} />)}
+        {getCurrentPage().map((recipe) => (
+          <Preview key={recipe.id} {...recipe} />
+        ))}
       </ul>
 
       <div className='pagination'>
-        <button className='btn--inline pagination__btn--prev'>
-          <svg className='search__icon'>
-            <use href='src/img/icons.svg#icon-arrow-left'></use>
-          </svg>
-          <span>Page 1</span>
-        </button>
-        <button className='btn--inline pagination__btn--next'>
-          <span>Page 3</span>
-          <svg className='search__icon'>
-            <use href='src/img/icons.svg#icon-arrow-right'></use>
-          </svg>
-        </button>
+        {page > 1 && (
+          <button
+            className='btn--inline pagination__btn--prev'
+            onClick={() => setPage((page) => page - 1)}
+          >
+            <svg className='search__icon'>
+              <use href='src/img/icons.svg#icon-arrow-left'></use>
+            </svg>
+            <span>Page {page - 1}</span>
+          </button>
+        )}
+        {page < getTotalPages() && (
+          <button
+            className='btn--inline pagination__btn--next'
+            onClick={() => setPage((page) => page + 1)}
+          >
+            <span>Page {page + 1}</span>
+            <svg className='search__icon'>
+              <use href='src/img/icons.svg#icon-arrow-right'></use>
+            </svg>
+          </button>
+        )}
       </div>
 
       <p className='copyright'>
