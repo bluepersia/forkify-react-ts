@@ -1,10 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
 import SearchForm from './SearchForm';
+import Bookmarks from './Bookmarks';
+import { IRecipe } from '../../models/recipe';
 
 export default function Header({
   setSearch,
+  bookmarks,
 }: {
   setSearch: Dispatch<SetStateAction<string>>;
+  bookmarks: IRecipe[];
 }): JSX.Element {
   return (
     <header className='header'>
@@ -29,18 +33,7 @@ export default function Header({
               </svg>
               <span>Bookmarks</span>
             </button>
-            <div className='bookmarks'>
-              <ul className='bookmarks__list'>
-                <div className='message'>
-                  <div>
-                    <svg>
-                      <use href='src/img/icons.svg#icon-smile'></use>
-                    </svg>
-                  </div>
-                  <p>No bookmarks yet. Find a nice recipe and bookmark it :)</p>
-                </div>
-              </ul>
-            </div>
+            <Bookmarks bookmarks={bookmarks} />
           </li>
         </ul>
       </nav>

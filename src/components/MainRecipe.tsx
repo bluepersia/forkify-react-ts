@@ -7,8 +7,10 @@ import ErrorDisplay from './ErrorDisplay';
 
 export default function MainRecipe({
   activeId,
+  bookmark,
 }: {
   activeId: string;
+  bookmark: (recipe: IRecipe) => void;
 }): JSX.Element {
   const queryClient = useQueryClient();
 
@@ -133,7 +135,7 @@ export default function MainRecipe({
               <use href='src/img/icons.svg#icon-user'></use>
             </svg>
           </div>
-          <button className='btn--round'>
+          <button className='btn--round' onClick={() => bookmark(recipe)}>
             <svg className=''>
               <use href='src/img/icons.svg#icon-bookmark-fill'></use>
             </svg>
