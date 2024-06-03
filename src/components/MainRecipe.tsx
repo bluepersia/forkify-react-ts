@@ -1,11 +1,11 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { IRecipe } from '../models/recipe';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import { baseURL } from '../utility';
 import Spinner from './Spinner';
 import ErrorDisplay from './ErrorDisplay';
 
-export default function MainRecipe({
+const MainRecipe = memo(function ({
   activeId,
   bookmark,
 }: {
@@ -182,4 +182,6 @@ export default function MainRecipe({
     );
   }
   return <div className='recipe'>{display}</div>;
-}
+});
+
+export default MainRecipe;

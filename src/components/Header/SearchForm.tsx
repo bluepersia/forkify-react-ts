@@ -4,9 +4,10 @@ import {
   FormEvent,
   SetStateAction,
   useState,
+  memo,
 } from 'react';
 
-export default function SearchForm({
+const SearchForm = memo(function ({
   setSearch,
 }: {
   setSearch: Dispatch<SetStateAction<string>>;
@@ -40,4 +41,6 @@ export default function SearchForm({
       </button>
     </form>
   );
-}
+});
+
+export default SearchForm;
