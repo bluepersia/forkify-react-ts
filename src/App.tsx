@@ -5,6 +5,7 @@ import {
   Dispatch,
   SetStateAction,
   createContext,
+  useCallback,
   useEffect,
   useState,
 } from 'react';
@@ -36,13 +37,16 @@ function App() {
     return [];
   });
 
-  function bookmark(bookmark: IRecipe): void {
-    setBookmarks((bookmarks) => {
-      if (bookmarks.find((bm) => bm.id === bookmark.id))
-        return bookmarks.filter((bm) => bm.id !== bookmark.id);
-      else return [...bookmarks, bookmark];
-    });
-  }
+  const bookmark = useCallback(
+    function (bookmark: IRecipe): void {
+      setBookmarks((bookmarks) => {
+        if (bookmarks.find((bm) => bm.id === bookmark.id))
+          return bookmarks.filter((bm) => bm.id !== bookmark.id);
+        else return [...bookmarks, bookmark];
+      });
+    },
+    [bookmarks]
+  );
 
   useEffect(() => {
     localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
