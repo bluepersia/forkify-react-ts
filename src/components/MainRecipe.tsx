@@ -18,6 +18,26 @@ export default function MainRecipe({
   });
   const [recipe, setRecipe] = useState<IRecipe | null>(null);
 
+  function modifyServings(mod: number): void {
+    setRecipe((recipe) => {
+      const newServings = recipe!.servings + mod;
+
+      if (newServings < 1 || newServings > 8) return recipe;
+
+      const mult = newServings / recipe!.servings;
+
+      return {
+        ...recipe!,
+        servings: newServings,
+        cooking_time: recipe!.cooking_time * mult,
+        ingredients: recipe!.ingredients.map((ing) => ({
+          ...ing,
+          quantity: ing.quantity * mult,
+        })),
+      };
+    });
+  }
+
   async function fetchRecipe(): Promise<IRecipe | null> {
     if (!activeId) return null;
 
@@ -89,12 +109,18 @@ export default function MainRecipe({
             <span className='recipe__info-text'>servings</span>
 
             <div className='recipe__info-buttons'>
-              <button className='btn--tiny btn--decrease-servings'>
+              <button
+                className='btn--tiny btn--decrease-servings'
+                onClick={() => modifyServings(-1)}
+              >
                 <svg>
                   <use href='src/img/icons.svg#icon-minus-circle'></use>
                 </svg>
               </button>
-              <button className='btn--tiny btn--increase-servings'>
+              <button
+                className='btn--tiny btn--increase-servings'
+                onClick={() => modifyServings(+1)}
+              >
                 <svg>
                   <use href='src/img/icons.svg#icon-plus-circle'></use>
                 </svg>
@@ -122,7 +148,7 @@ export default function MainRecipe({
                 <svg className='recipe__icon'>
                   <use href='src/img/icons.svg#icon-check'></use>
                 </svg>
-                <div className='recipe__quantity'>{ing.quantity}</div>
+                <div className='recipe__quantity'>{ing.quantity || ''}</div>
                 <div className='recipe__description'>
                   <span className='recipe__unit'>{ing.unit}</span>
                   {ing.description}
