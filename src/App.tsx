@@ -4,6 +4,7 @@ import Header from './components/Header';
 import { Dispatch, SetStateAction, createContext, useState } from 'react';
 import Search from './components/Search';
 import MainRecipe from './components/MainRecipe';
+import { IRecipe } from './models/recipe';
 
 const queryClient = new QueryClient();
 
@@ -21,14 +22,23 @@ function App() {
   const [search, setSearch] = useState<string>('');
 
   const [activeId, setActiveId] = useState<string>('');
+  const [bookmarks, setBookmarks] = useState<IRecipe[]>([]);
+
+  function bookmark(bookmark: IRecipe): void {
+    setBookmarks((bookmarks) => {
+      if (bookmarks.find((bm) => bm.id === bookmark.id))
+        return bookmarks.filter((bm) => bm.id !== bookmark.id);
+      else return [...bookmarks, bookmark];
+    });
+  }
 
   return (
     <AppContext.Provider value={{ activeId, setActiveId }}>
       <QueryClientProvider client={queryClient}>
         <div className='container'>
-          <Header setSearch={setSearch} />
+          <Header setSearch={setSearch} bookmarks={bookmarks} />
           <Search name={search} />
-          <MainRecipe activeId={activeId} />
+          <MainRecipe activeId={activeId} bookmark={bookmark} />
         </div>
       </QueryClientProvider>
     </AppContext.Provider>
