@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Header from './components/Header';
 import { Dispatch, SetStateAction, createContext, useState } from 'react';
 import Search from './components/Search';
+import MainRecipe from './components/MainRecipe';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function App() {
         <div className='container'>
           <Header setSearch={setSearch} />
           <Search name={search} />
+          <MainRecipe activeId={activeId} />
         </div>
       </QueryClientProvider>
     </AppContext.Provider>
